@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#F4F7FB"/>
+  <rect x="80" y="70" width="1040" height="490" rx="32" fill="#FFFFFF"/>
+  <rect x="120" y="120" width="56" height="56" rx="14" fill="#0A1730"/>
+  <path d="M132 136h8l8 18 8-18h8l-12 32h-8l-12-32z" fill="#FFFFFF"/>
+  <text x="196" y="158" fill="#0A1730" font-family="ui-sans-serif, system-ui, sans-serif" font-size="32" font-weight="700">vividworks.my</text>
+  <text x="120" y="280" fill="#0A1730" font-family="ui-sans-serif, system-ui, sans-serif" font-size="54" font-weight="700">Bina website profesional</text>
+  <text x="120" y="348" fill="#0A1730" font-family="ui-sans-serif, system-ui, sans-serif" font-size="54" font-weight="700">dengan AI dalam minit.</text>
+  <text x="120" y="420" fill="#46566C" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24">Laman pemasaran untuk perniagaan Malaysia.</text>
+  <rect x="120" y="470" width="220" height="48" rx="12" fill="#1554E0"/>
+  <text x="230" y="501" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700" text-anchor="middle">vividworks.my</text>
+</svg>
