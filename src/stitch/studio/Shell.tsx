@@ -14,7 +14,8 @@ import {
   Wand2,
   X,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Seo } from "../../components/seo/Seo.tsx";
 import { useBodyScrollLock } from "../../hooks/useBodyScrollLock.ts";
 import { cx } from "../../lib/cx.ts";
 import { DemoBanner } from "../DemoBanner.tsx";
@@ -32,6 +33,7 @@ const links = [
 ] as const;
 
 export function StudioShell({ title, children }: { title: string; children: ReactNode }) {
+  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -74,6 +76,12 @@ export function StudioShell({ title, children }: { title: string; children: Reac
 
   return (
     <div className="min-h-screen bg-fp-surface text-fp-ink lg:grid lg:grid-cols-[17.5rem_minmax(0,1fr)]">
+      <Seo
+        title={title}
+        description="Paparan demo studio. Tiada akaun, bayaran, penerbitan, atau mesej WhatsApp."
+        path={pathname}
+        noIndex
+      />
       <div className={cx("fixed inset-0 z-40 lg:static lg:block", open ? "block" : "hidden lg:block")}>
         <button
           type="button"

@@ -3,6 +3,7 @@ import type { FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { templates } from "../data/templates.ts";
 import { cx } from "../lib/cx.ts";
+import { Seo } from "../components/seo/Seo.tsx";
 import { DemoBanner } from "../stitch/DemoBanner.tsx";
 import { demoUser } from "../stitch/demo.ts";
 
@@ -70,6 +71,12 @@ export default function WizardPage() {
 
   return (
     <div className="fp-shell min-h-screen bg-fp-surface text-fp-ink">
+      <Seo
+        title="Wizard konfigurasi"
+        description="Empat langkah demo untuk templat, palet, seksyen dan WhatsApp. Tiada laman dijana pada pelayan."
+        path="/wizard"
+        noIndex
+      />
       <header className="border-b border-fp-line bg-white">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-4">
           <Link to="/" className="font-bold">VividWorks</Link>
@@ -79,7 +86,11 @@ export default function WizardPage() {
       </header>
       <form className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-6 lg:grid-cols-[minmax(0,1fr)_22rem]" onSubmit={onGenerate}>
         <div>
-          <DemoBanner />
+          <h1 className="text-2xl font-bold tracking-tight">Konfigurasi templat dan bisnes</h1>
+          <p className="mt-2 text-sm text-fp-muted">Langkah demo. AI pada skrin ini tidak memanggil model.</p>
+          <div className="mt-4">
+            <DemoBanner />
+          </div>
           <div className="mt-4">
             <div className="h-2 overflow-hidden rounded-full bg-white">
               <div className="h-full bg-fp-indigo" style={{ width: `${progress}%` }} />
