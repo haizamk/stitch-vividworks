@@ -14,6 +14,8 @@ class Inquiry extends Model
 
     const UPDATED_AT = null;
 
+    protected $dateFormat = 'Y-m-d H:i:s.u';
+
     /**
      * @var list<string>
      */
