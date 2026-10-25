@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Inquiry;
+use App\Support\ContactRules;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -26,14 +27,14 @@ class InquiryApiTest extends TestCase
         ];
     }
 
-    public function test_health_reports_the_file_storage_label_on_sqlite(): void
+    public function test_health_reports_the_storage_label_for_the_configured_driver(): void
     {
         $response = $this->getJson('/api/health')
             ->assertOk()
             ->assertExactJson([
                 'ok' => true,
                 'service' => 'vividworks-my',
-                'storage' => 'file',
+                'storage' => ContactRules::storageName(),
             ]);
 
         $this->assertFalse($response->headers->has('Access-Control-Allow-Origin'));
@@ -52,6 +53,7 @@ class InquiryApiTest extends TestCase
 
     public function test_health_returns_503_when_the_database_cannot_be_reached(): void
     {
+        $original = config('database.default');
         config([
             'database.default' => 'pgsql',
             'database.connections.pgsql.host' => '127.0.0.1',
@@ -72,21 +74,19 @@ class InquiryApiTest extends TestCase
                     'storage' => 'postgres',
                 ]);
         } finally {
-            config(['database.default' => 'sqlite']);
+            config(['database.default' => $original]);
             DB::purge('pgsql');
         }
     }
 
     public function test_contact_stores_an_inquiry(): void
     {
+        $storage = ContactRules::storageName();
         $response = $this->postJson('/api/contact', $this->valid())
             ->assertCreated()
             ->assertJsonPath('saved', true)
-            ->assertJsonPath('storage', 'file')
-            ->assertJsonPath(
-                'message',
-                'Mesej telah disimpan pada pelayan ini. E-mel automatik belum diaktifkan.',
-            );
+            ->assertJsonPath('storage', $storage)
+            ->assertJsonPath('message', ContactRules::savedMessage($storage));
 
         $id = $response->json('id');
         $this->assertMatchesRegularExpression(
