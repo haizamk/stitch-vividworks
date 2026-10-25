@@ -1,0 +1,24 @@
+[Unit]
+Description=PHP 8.5 FastCGI Process Manager for vividpreview
+Documentation=file:///home/vividpreview/laravel-app
+After=network.target
+# Independent of the global PHP-FPM master. Do not add PartOf=php8.5-fpm.service.
+
+[Service]
+Type=notify
+ExecStart=/usr/sbin/php-fpm8.5 --nodaemonize --fpm-config /etc/php/8.5/fpm-vividpreview/php-fpm.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+PIDFile=/run/php/php8.5-fpm-vividpreview.pid
+Restart=on-failure
+RestartSec=3
+ProtectSystem=full
+PrivateDevices=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_NETLINK AF_UNIX
+RestrictNamespaces=true
+
+[Install]
+WantedBy=multi-user.target
