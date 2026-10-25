@@ -1,7 +1,10 @@
 {
   "mcpServers": {
-    "render": {
-      "url": "https://mcp.render.com/mcp"
+    "northflank": {
+      "url": "https://mcp.northflank.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${env:NORTHFLANK_API_TOKEN}"
+      }
     }
   }
 }

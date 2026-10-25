@@ -9,12 +9,20 @@ export function storageMode() {
   return process.env.DATABASE_URL ? "postgres" : "file";
 }
 
+function postgresSsl(connectionString) {
+  if (process.env.DATABASE_SSL === "false" || /sslmode=disable/i.test(connectionString)) return false;
+  if (process.env.DATABASE_SSL === "true" || /sslmode=(require|verify-ca|verify-full|prefer)/i.test(connectionString)) {
+    return { rejectUnauthorized: false };
+  }
+  if (/localhost|127\.0\.0\.1/.test(connectionString)) return undefined;
+  return { rejectUnauthorized: false };
+}
+
 function createPostgres() {
   const connectionString = process.env.DATABASE_URL;
-  const local = /localhost|127\.0\.0\.1/.test(connectionString);
   const pool = new pg.Pool({
     connectionString,
-    ssl: local ? undefined : { rejectUnauthorized: false },
+    ssl: postgresSsl(connectionString),
     max: 5,
   });
 

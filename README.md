@@ -67,23 +67,29 @@ Optional environment overrides are listed in `.env.example`. Copy it to `.env` o
 
 Starter, Professional, and Business are proposed labels. Leave their price and features as “Akan disahkan” until an approved specification replaces them. Do not describe FREE as free for life unless that is explicitly confirmed.
 
-## Render
+## Northflank
 
-`render.yaml` is a Blueprint for one Node web service and one free Postgres database in Singapore. Render generates `ADMIN_TOKEN` and injects `DATABASE_URL`.
+`northflank.json` is a template for one project in Asia Southeast (Singapore), one PostgreSQL 16 addon, and one combined service. The service builds `Dockerfile` from Git and serves the site on port 8080. The template aliases the addon `POSTGRES_URI` to `DATABASE_URL`, then restarts the service after the database and the first deployment are running.
 
-Deploy progress is shown by Render after the Blueprint is applied. This agent cannot sign in to Render for you.
+Northflank shows each template node, build, and deployment as it runs. This repository cannot sign in to Northflank for you. The public plan catalog has no free tier: the site uses `nf-compute-10`, the database uses `nf-compute-20`, and image builds use `nf-compute-400-16` while a build is running.
 
-1. In Cursor, run `/add-plugin render`, install the official Render plugin, and choose **Authenticate**.
-2. Put this project on GitHub, GitLab, or Bitbucket. Render Blueprints deploy from those hosts. Use the **Create repo** control in Cursor if this project does not have one yet.
-3. In the Render Dashboard, create a Blueprint and select that repository. Render reads `render.yaml` and shows the build and deploy log.
+1. Create a Northflank account and a team API token. In the environment used by Cursor, set `NORTHFLANK_API_TOKEN` to that token. `.cursor/mcp.json` points at `https://mcp.northflank.com/mcp` and reads the token from the environment. Do not commit the token.
+2. Put this project on GitHub, GitLab, or Bitbucket. Use the **Create repo** control in Cursor if this project does not have one yet. Northflank builds from that repository, not from the temporary project remote.
+3. In Northflank, create a template and paste `northflank.json`, or enable GitOps on that file. Before you run it, set these template arguments. Store `ADMIN_TOKEN` as an argument override so the generated value stays in Northflank and out of Git:
 
-`GET /api/health` is the health check. Read stored inquiries with the generated `ADMIN_TOKEN`:
+   - `REPOSITORY_URL`: the HTTPS URL of the Git repository
+   - `VCS_PROVIDER`: `github`, `gitlab`, or `bitbucket`
+   - `ADMIN_TOKEN`: `${fn.randomSecret(32)}`
+
+4. Run the template and follow the node progress in the Northflank run view. The public site URL appears on the `vividworks-web` port after the service is running.
+
+`GET /api/health` is the startup and readiness check. Read stored inquiries with the generated token:
 
 ```bash
-curl -H "Authorization: Bearer $ADMIN_TOKEN" https://<your-service>.onrender.com/api/inquiries
+curl -H "Authorization: Bearer $ADMIN_TOKEN" https://<your-service>/api/inquiries
 ```
 
-Do not commit `ADMIN_TOKEN`, `DATABASE_URL`, or `data/inquiries.json`.
+If the service logs a TLS error while connecting to Postgres, set `DATABASE_SSL=false` on the secret group and restart the service. Do not commit `ADMIN_TOKEN`, `DATABASE_URL`, `NORTHFLANK_API_TOKEN`, or `data/inquiries.json`.
 
 ## Future actions
 
