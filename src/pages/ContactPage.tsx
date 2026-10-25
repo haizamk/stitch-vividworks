@@ -13,7 +13,7 @@ import { PageHeader } from "../components/layout/PageHeader.tsx";
 import { Seo } from "../components/seo/Seo.tsx";
 
 const description =
-  "Saluran hubungan rasmi belum disahkan. Borang di halaman ini ialah demonstrasi dan tidak menghantar mesej.";
+  "Hantar pertanyaan melalui borang ini. Mesej disimpan pada pelayan, tetapi e-mel automatik belum diaktifkan. E-mel, telefon dan alamat rasmi masih belum disahkan.";
 
 const emptyDraft: ContactDraft = {
   name: "",
@@ -23,36 +23,82 @@ const emptyDraft: ContactDraft = {
   message: "",
 };
 
+type SubmitState =
+  | { kind: "idle" }
+  | { kind: "saving" }
+  | { kind: "saved"; message: string }
+  | { kind: "error"; message: string };
+
 export default function ContactPage() {
   const [params] = useSearchParams();
   const requestedPlan = planById(params.get("pakej"))?.id ?? "";
   const [draft, setDraft] = useState<ContactDraft>({ ...emptyDraft, plan: requestedPlan });
   const [syncedPlan, setSyncedPlan] = useState(requestedPlan);
   const [errors, setErrors] = useState<ContactErrors>({});
-  const [prepared, setPrepared] = useState(false);
+  const [submit, setSubmit] = useState<SubmitState>({ kind: "idle" });
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
 
   if (syncedPlan !== requestedPlan) {
     setSyncedPlan(requestedPlan);
     setDraft((current) => ({ ...current, plan: requestedPlan }));
-    setPrepared(false);
-  }
-
-  function update<K extends keyof ContactDraft>(key: K, value: ContactDraft[K]) {
-    setDraft((current) => ({ ...current, [key]: value }));
-    setPrepared(false);
+    setSubmit({ kind: "idle" });
     setCopied(false);
     setCopyFailed(false);
   }
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function update<K extends keyof ContactDraft>(key: K, value: ContactDraft[K]) {
+    setDraft((current) => ({ ...current, [key]: value }));
+    setSubmit((current) => (current.kind === "saving" ? current : { kind: "idle" }));
+    setCopied(false);
+    setCopyFailed(false);
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const nextErrors = validateContact(draft);
     setErrors(nextErrors);
     setCopied(false);
     setCopyFailed(false);
-    setPrepared(Object.keys(nextErrors).length === 0);
+    if (Object.keys(nextErrors).length > 0) {
+      setSubmit({ kind: "idle" });
+      return;
+    }
+
+    setSubmit({ kind: "saving" });
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(draft),
+      });
+      const body = (await response.json().catch(() => null)) as {
+        saved?: boolean;
+        message?: string;
+        errors?: ContactErrors;
+      } | null;
+
+      if (response.status === 400 && body?.errors) {
+        setErrors(body.errors);
+        setSubmit({ kind: "error", message: "Semak medan yang ditanda, kemudian cuba lagi." });
+        return;
+      }
+
+      if (!response.ok || !body?.saved) {
+        setSubmit({
+          kind: "error",
+          message: body?.message || "Mesej tidak disimpan.",
+        });
+        return;
+      }
+
+      setSubmit({
+        kind: "saved",
+        message: body.message || "Mesej telah disimpan. E-mel automatik belum diaktifkan.",
+      });
+    } catch {
+      setSubmit({ kind: "error", message: "Mesej tidak disimpan. Sambungan ke pelayan gagal." });
+    }
   }
 
   async function copyMessage() {
@@ -109,9 +155,9 @@ export default function ContactPage() {
         </aside>
 
         <div>
-          <form className="rounded-2xl border border-line bg-white p-5 sm:p-6" onSubmit={onSubmit} noValidate>
+          <form className="rounded-2xl border border-line bg-white p-5 sm:p-6" onSubmit={(event) => void onSubmit(event)} noValidate>
             <p className="rounded-xl bg-surface px-4 py-3 text-sm leading-6 text-ink">
-              Borang demonstrasi. Menekan butang di bawah tidak menghantar mesej kepada vividworks.my.
+              Mesej disimpan pada pelayan laman ini. Tiada e-mel dihantar secara automatik.
             </p>
             <div className="mt-5 grid gap-4">
               <TextField
@@ -167,18 +213,16 @@ export default function ContactPage() {
               />
             </div>
             <div className="mt-5">
-              <Button type="submit">Sediakan mesej demonstrasi</Button>
+              <Button type="submit" disabled={submit.kind === "saving"}>
+                {submit.kind === "saving" ? "Sedang menyimpan…" : "Hantar mesej"}
+              </Button>
             </div>
           </form>
 
-          {prepared ? (
+          {submit.kind === "saved" ? (
             <div className="mt-4 rounded-2xl border border-line bg-white p-5" role="status">
-              <h2 className="text-lg font-semibold text-navy">Mesej tidak dihantar</h2>
-              <p className="mt-2 text-sm leading-6 text-muted">
-                {site.contact.email
-                  ? "Borang ini tidak menghantar mesej secara automatik. Anda boleh membukanya dalam aplikasi e-mel, atau menyalin teks di bawah."
-                  : "E-mel rasmi belum disahkan, jadi tiada pautan mailto disediakan. Salin teks di bawah jika anda mahu menyimpannya."}
-              </p>
+              <h2 className="text-lg font-semibold text-navy">Mesej telah disimpan</h2>
+              <p className="mt-2 text-sm leading-6 text-muted">{submit.message}</p>
               <pre className="mt-4 overflow-x-auto rounded-xl bg-surface p-4 text-sm leading-6 whitespace-pre-wrap text-ink">
                 {contactSummary(draft)}
               </pre>
@@ -198,6 +242,12 @@ export default function ContactPage() {
                 </p>
               ) : null}
             </div>
+          ) : null}
+
+          {submit.kind === "error" ? (
+            <p className="mt-4 rounded-xl border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-sm leading-6 text-[#9f1239]" role="alert">
+              {submit.message}
+            </p>
           ) : null}
         </div>
       </Container>

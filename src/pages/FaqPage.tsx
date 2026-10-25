@@ -36,7 +36,7 @@ export default function FaqPage() {
           <div className="mt-8 rounded-2xl border border-line bg-surface p-5">
             <h2 className="text-lg font-semibold text-navy">Masih perlukan penjelasan?</h2>
             <p className="mt-2 text-sm leading-6 text-muted">
-              Saluran hubungan rasmi belum disahkan. Anda boleh menyediakan mesej pada halaman hubungi. Mesej itu tidak dihantar secara automatik.
+              Saluran e-mel, telefon dan alamat rasmi belum disahkan. Borang hubungi menyimpan mesej pada pelayan, tetapi e-mel automatik belum diaktifkan.
             </p>
             <div className="mt-4">
               <Button href="/contact">Hubungi Kami</Button>

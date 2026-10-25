@@ -2,11 +2,13 @@
 
 Public marketing website for vividworks.my, a Malaysian AI-powered website builder. The interface is written in Bahasa Melayu (Malaysia).
 
-This repository is the marketing site only. It does not include the SaaS platform, accounts, billing, the visual editor, or AI generation.
+The site is a small full-stack app: a React frontend and a Node API that stores contact inquiries. With `DATABASE_URL` set, inquiries go to PostgreSQL. Without it, they are written to `data/inquiries.json` on the server. The API does not send email.
+
+This is still the marketing site. It does not include customer accounts, the visual editor, AI generation, or billing.
 
 ## Requirements
 
-- Node.js 22 or newer
+- Node.js 22
 - npm
 
 ## Local development
@@ -16,17 +18,17 @@ npm install
 npm run dev
 ```
 
-The dev server runs at [http://127.0.0.1:4321](http://127.0.0.1:4321).
-
-## Checks
+The website runs at [http://127.0.0.1:4321](http://127.0.0.1:4321). Vite proxies `/api` to the API on port 8787.
 
 ```bash
+npm test
 npm run lint
 npm run typecheck
 npm run build
+npm start
 ```
 
-`npm run build` also checks that brand colours stay in sync and regenerates the template preview SVGs.
+`npm start` serves the production build and the API on `PORT` (default 8787). `npm run build` checks brand colours and regenerates the template preview SVGs.
 
 ## Pages
 
@@ -37,10 +39,18 @@ npm run build
 | `/templates` | Template preview gallery |
 | `/how-it-works` | Planned platform workflow |
 | `/faq` | Frequently asked questions |
-| `/contact` | Contact details and a demonstration form |
+| `/contact` | Contact details and the inquiry form |
 | `/privacy` | Draft privacy policy |
 | `/terms` | Draft terms of service |
 | `/akan-datang` | Placeholder for future SaaS actions |
+
+## API
+
+| Method | Path | Behaviour |
+| --- | --- | --- |
+| `GET` | `/api/health` | Reports storage mode. Returns 503 if Postgres cannot be reached. |
+| `POST` | `/api/contact` | Validates and stores one inquiry. Does not send email. |
+| `GET` | `/api/inquiries` | Last 100 inquiries. Requires `Authorization: Bearer <ADMIN_TOKEN>`. Hidden when the token is unset. |
 
 ## Configuration
 
@@ -53,9 +63,27 @@ Edit these files rather than hard-coding values in components:
 - `src/data/faqs.ts` — FAQ copy
 - `src/data/content.ts` — homepage benefits, workflow, and legal draft sections
 
-Optional environment overrides are listed in `.env.example`. Copy it to `.env` only when you have real values. Empty values are intentional: the site must not invent an email address, phone number, or office address.
+Optional environment overrides are listed in `.env.example`. Copy it to `.env` only when you have real values. Empty contact fields are intentional: the site must not invent an email address, phone number, or office address.
 
 Starter, Professional, and Business are proposed labels. Leave their price and features as “Akan disahkan” until an approved specification replaces them. Do not describe FREE as free for life unless that is explicitly confirmed.
+
+## Render
+
+`render.yaml` is a Blueprint for one Node web service and one free Postgres database in Singapore. Render generates `ADMIN_TOKEN` and injects `DATABASE_URL`.
+
+Deploy progress is shown by Render after the Blueprint is applied. This agent cannot sign in to Render for you.
+
+1. In Cursor, run `/add-plugin render`, install the official Render plugin, and choose **Authenticate**.
+2. Put this project on GitHub, GitLab, or Bitbucket. Render Blueprints deploy from those hosts. Use the **Create repo** control in Cursor if this project does not have one yet.
+3. In the Render Dashboard, create a Blueprint and select that repository. Render reads `render.yaml` and shows the build and deploy log.
+
+`GET /api/health` is the health check. Read stored inquiries with the generated `ADMIN_TOKEN`:
+
+```bash
+curl -H "Authorization: Bearer $ADMIN_TOKEN" https://<your-service>.onrender.com/api/inquiries
+```
+
+Do not commit `ADMIN_TOKEN`, `DATABASE_URL`, or `data/inquiries.json`.
 
 ## Future actions
 
@@ -65,8 +93,8 @@ Log Masuk, Bina Website Percuma, Mula Percuma, and template selection open `/aka
 - `VITE_SAAS_REGISTER_URL`
 - `VITE_SAAS_EDITOR_URL`
 
-The contact form validates input and then shows the message for copying. It does not claim the message was sent. If `VITE_CONTACT_EMAIL` is set, it also offers a `mailto` link.
-
 ## Scope
 
-Not included, and not to be added to this site: Laravel, PostgreSQL, GrapesJS, n8n, OpenRouter, authentication, dashboards, billing, or production deployment configuration beyond a static-host rewrite in `vercel.json`.
+Included: the marketing pages, the contact API, and Postgres for those inquiries.
+
+Not included: Laravel, GrapesJS, n8n, OpenRouter, authentication, dashboards, billing, or the website-builder product itself. A saved inquiry is not an email and not a customer account.
