@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('business')->default('');
             $table->text('plan')->default('');
             $table->text('message');
-            $table->timestampTz('created_at')->useCurrent();
+            $table->timestampTz('created_at', 6)->useCurrent();
         });
     }
 
