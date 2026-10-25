@@ -21,6 +21,7 @@ export const brandColors = {
   fpMuted: "#475569",
   fpLine: "#E2E8F0",
   fpViolet: "#7C3AED",
+  fpSurface: "#FAF8FF",
 } as const;
 
 export const brandFont = {

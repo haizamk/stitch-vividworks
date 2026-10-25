@@ -30,6 +30,27 @@ npm start
 
 `npm start` serves the production build and the API on `PORT` (default 8787). `npm run build` checks brand colours and regenerates the template preview SVGs.
 
+## Stitch screens (Fasa C2)
+
+Branch `cursor/vividworks-stitch-c2-3339` turns the Google Stitch boards into React routes. Studio, wizard, editor, AI copy, analytics, WhatsApp, billing and settings are labelled demo. They do not create accounts, charge cards, publish sites, or send WhatsApp messages. Paid plan prices from the Stitch export (RM39, RM79, RM169, yearly 20 percent, 14-day trials) are not shown.
+
+Leave `DATABASE_URL` unset. Do not deploy this branch to preview.vividworks.my until a later approval. Pushing `main` still updates the old Express app only and does not replace the Laravel `public` files that now serve the preview host.
+
+| Path | Board |
+| --- | --- |
+| `/` | Frontpage, mobile layout, four prices, contact modal |
+| `/pricing` | Four plans, comparison, signup and success modals |
+| `/templates` | Six real previews and a preview modal |
+| `/wizard` | Four-step configuration, including the generating state |
+| `/studio` | Dashboard demo |
+| `/studio/laman` | Site list demo |
+| `/studio/editor` | Local canvas standing in for GrapesJS |
+| `/studio/ai` | Copy form, insert modal, transfer highlight |
+| `/studio/analitik` | Sample charts |
+| `/studio/whatsapp` | Widget settings, test does not send |
+| `/studio/langganan` | Plan comparison without payment |
+| `/studio/tetapan` | Profile and business forms kept in the browser |
+
 ## Frontpage redesign (Fasa C1)
 
 The homepage on branch `cursor/vividworks-frontpage-redesign-3339` uses the indigo design tokens in `src/data/brand.ts` (`fpIndigo` and the related `fp*` colours). Privacy, terms, contact, pricing, templates, FAQ and how-it-works keep the previous header, footer and palette.

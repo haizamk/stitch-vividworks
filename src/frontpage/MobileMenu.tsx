@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { Button } from "../components/ui/Button.tsx";
 import { cx } from "../lib/cx.ts";
-import type { FutureTarget } from "../lib/actions.ts";
 
 type Item = { id: string; label: string; href: string };
 
@@ -9,11 +8,11 @@ type MobileMenuProps = {
   id: string;
   items: readonly Item[];
   currentId: string;
-  login: FutureTarget;
-  start: FutureTarget;
+  start: { href: string; external: boolean };
+  onLogin: () => void;
 };
 
-export function MobileMenu({ id, items, currentId, login, start }: MobileMenuProps) {
+export function MobileMenu({ id, items, currentId, start, onLogin }: MobileMenuProps) {
   return (
     <div id={id} className="fixed inset-x-0 top-[4.25rem] bottom-0 z-40 overflow-y-auto border-t border-fp-line bg-white xl:hidden">
       <nav aria-label="Mudah alih" className="mx-auto flex w-full max-w-7xl flex-col gap-1 px-4 py-4">
@@ -34,7 +33,7 @@ export function MobileMenu({ id, items, currentId, login, start }: MobileMenuPro
           );
         })}
         <div className="mt-3 grid gap-2">
-          <Button href={login.href} external={login.external} variant="indigoSecondary" shape="full" className="w-full">
+          <Button variant="indigoSecondary" shape="full" className="w-full" onClick={onLogin}>
             Log Masuk
           </Button>
           <Button href={start.href} external={start.external} variant="indigo" shape="full" className="w-full">

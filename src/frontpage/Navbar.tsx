@@ -3,8 +3,8 @@ import { Menu, X } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Button } from "../components/ui/Button.tsx";
 import { useBodyScrollLock } from "../hooks/useBodyScrollLock.ts";
-import { futureTarget } from "../lib/actions.ts";
 import { cx } from "../lib/cx.ts";
+import { DemoLoginModal } from "../stitch/DemoLoginModal.tsx";
 import { frontNav } from "./content.ts";
 import { MobileMenu } from "./MobileMenu.tsx";
 
@@ -36,8 +36,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const login = futureTarget("log-masuk");
-  const start = futureTarget("bina-website");
+  const [loginOpen, setLoginOpen] = useState(false);
+  const start = { href: "/wizard", external: false as const };
   const currentId = currentSection(location.hash);
 
   if (menuLocation !== locationKey) {
@@ -122,7 +122,7 @@ export function Navbar() {
         </nav>
 
         <div className="hidden items-center gap-2 xl:flex">
-          <Button href={login.href} external={login.external} variant="indigoGhost" shape="full">
+          <Button variant="indigoGhost" shape="full" onClick={() => setLoginOpen(true)}>
             Log Masuk
           </Button>
           <Button href={start.href} external={start.external} variant="indigo" shape="full">
@@ -145,8 +145,18 @@ export function Navbar() {
 
     </header>
     {open ? (
-      <MobileMenu id="menu-frontpage" items={frontNav} currentId={currentId} login={login} start={start} />
+      <MobileMenu
+        id="menu-frontpage"
+        items={frontNav}
+        currentId={currentId}
+        start={start}
+        onLogin={() => {
+          setOpen(false);
+          setLoginOpen(true);
+        }}
+      />
     ) : null}
+    <DemoLoginModal open={loginOpen} onClose={() => setLoginOpen(false)} />
     </div>
   );
 }

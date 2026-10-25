@@ -3,11 +3,9 @@ import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button.tsx";
 import { Container } from "../components/layout/Container.tsx";
 import { pricingPlans } from "../data/pricing.ts";
-import { futureTarget } from "../lib/actions.ts";
 import { cx } from "../lib/cx.ts";
 
 export function PricingSection() {
-  const start = futureTarget("bina-website");
 
   return (
     <section id="harga" aria-labelledby="harga-tajuk" className="scroll-mt-24">
@@ -67,7 +65,7 @@ export function PricingSection() {
                         {plan.cta.label}
                       </Button>
                     ) : (
-                      <Button href={start.href} external={start.external} variant="indigo" shape="full" className="w-full">
+                      <Button href="/wizard" variant="indigo" shape="full" className="w-full">
                         {plan.cta.label}
                       </Button>
                     )}

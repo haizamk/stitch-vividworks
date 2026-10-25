@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { ArrowRight, CircleDollarSign, Hammer, MousePointerClick } from "lucide-react";
 import { Button } from "../components/ui/Button.tsx";
 import { Container } from "../components/layout/Container.tsx";
-import { futureTarget } from "../lib/actions.ts";
+import { ContactModal } from "../stitch/ContactModal.tsx";
 import { EditorPreview } from "./EditorPreview.tsx";
 
 const points = [
@@ -11,7 +12,7 @@ const points = [
 ];
 
 export function HeroSection() {
-  const start = futureTarget("bina-website");
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <section id="utama" aria-labelledby="utama-tajuk" className="scroll-mt-24 overflow-hidden">
@@ -27,12 +28,15 @@ export function HeroSection() {
             VividWorks membantu individu dan perniagaan kecil membina website profesional tanpa perlu tahu kod.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button href={start.href} external={start.external} variant="indigo" shape="full" size="lg">
+            <Button href="/wizard" variant="indigo" shape="full" size="lg">
               Bina Website Percuma
               <ArrowRight size={18} />
             </Button>
             <Button href="/#templat" variant="indigoSecondary" shape="full" size="lg">
               Lihat Templat
+            </Button>
+            <Button variant="indigoGhost" shape="full" size="lg" onClick={() => setContactOpen(true)}>
+              Hubungi Kami
             </Button>
           </div>
           <ul className="mt-7 grid gap-3 sm:grid-cols-3">
@@ -46,6 +50,7 @@ export function HeroSection() {
         </div>
         <EditorPreview />
       </Container>
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </section>
   );
 }

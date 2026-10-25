@@ -45,6 +45,6 @@ export const faqs: FaqItem[] = [
     id: "bila-boleh-diguna",
     question: "Bilakah AI Website Builder boleh digunakan?",
     answer:
-      "Pembina website AI belum dibuka untuk kegunaan umum. Laman ini ialah laman pemasaran. Butang seperti “Bina Website Percuma” membawa ke halaman Akan Datang sehingga platform disepadukan. Tarikh pelancaran belum diumumkan.",
+      "Pembina website AI belum dibuka untuk kegunaan umum. Butang bina, log masuk, editor, AI, WhatsApp dan analitik membuka paparan demo yang dilabelkan. Tiada akaun, bayaran atau laman diterbitkan. Tarikh pelancaran belum diumumkan.",
   },
 ];

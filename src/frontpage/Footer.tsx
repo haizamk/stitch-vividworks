@@ -8,6 +8,8 @@ const more = [
   { label: "Privasi", href: "/privacy" },
   { label: "Terma", href: "/terms" },
   { label: "Akan Datang", href: "/akan-datang" },
+  { label: "Studio demo", href: "/studio" },
+  { label: "Wizard demo", href: "/wizard" },
 ];
 
 export function Footer() {

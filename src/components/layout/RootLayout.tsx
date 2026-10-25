@@ -11,20 +11,21 @@ import { RouteFallback } from "./RouteFallback.tsx";
 export function RootLayout() {
   useRouteScroll();
   const { pathname } = useLocation();
-  const frontpage = pathname === "/";
+  const studio = pathname === "/studio" || pathname.startsWith("/studio/") || pathname === "/wizard";
+  const stitch = pathname === "/" || pathname === "/pricing" || pathname === "/templates";
 
   return (
-    <div className={cx("flex min-h-screen flex-col bg-white", frontpage && "fp-shell")}>
+    <div className={cx("flex min-h-screen flex-col bg-white", (stitch || studio) && "fp-shell bg-fp-surface")}>
       <a className="skip-link" href="#kandungan">
         Langkau ke kandungan
       </a>
-      {frontpage ? <Navbar /> : <Header />}
+      {stitch ? <Navbar /> : studio ? null : <Header />}
       <main id="kandungan" tabIndex={-1} className="flex-1">
         <Suspense fallback={<RouteFallback />}>
           <Outlet />
         </Suspense>
       </main>
-      {frontpage ? <FrontFooter /> : <Footer />}
+      {stitch ? <FrontFooter /> : studio ? null : <Footer />}
     </div>
   );
 }

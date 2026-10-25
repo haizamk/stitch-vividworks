@@ -1,11 +1,12 @@
+import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/Button.tsx";
 import { Container } from "../components/layout/Container.tsx";
-import { futureTarget } from "../lib/actions.ts";
+import { ContactModal } from "../stitch/ContactModal.tsx";
 
 export function FinalCTA() {
-  const start = futureTarget("bina-website");
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <section id="mula" aria-labelledby="mula-tajuk" className="scroll-mt-24">
@@ -16,22 +17,30 @@ export function FinalCTA() {
             Sedia Membina Website Pertama Anda?
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-[#e0e7ff] sm:text-base">
-            Butang di bawah membawa ke halaman Akan Datang. Tiada akaun dicipta. Jika anda mahu dihubungi apabila platform dibuka, gunakan borang minat.
+            Wizard dan studio di bawah ialah demo. Tiada akaun dicipta. Pertanyaan sebenar masih melalui borang hubungi.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button href={start.href} external={start.external} variant="onIndigo" shape="full" size="lg">
+            <Button href="/wizard" variant="onIndigo" shape="full" size="lg">
               Bina Website Percuma
               <ArrowRight size={18} />
             </Button>
+            <button
+              type="button"
+              className="inline-flex h-12 items-center justify-center rounded-full px-5 text-[15px] font-semibold text-white underline-offset-4 hover:underline"
+              onClick={() => setContactOpen(true)}
+            >
+              Hubungi Kami
+            </button>
             <Link
               to="/contact"
               className="inline-flex h-12 items-center justify-center rounded-full px-5 text-[15px] font-semibold text-white underline-offset-4 hover:underline"
             >
-              Hantar borang minat
+              Halaman borang
             </Link>
           </div>
         </div>
       </Container>
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </section>
   );
 }
