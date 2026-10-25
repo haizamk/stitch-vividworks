@@ -69,7 +69,7 @@ Starter, Professional, and Business are proposed labels. Leave their price and f
 
 ## Preview server
 
-https://preview.vividworks.my is the isolated preview on the existing VPS. Opening it asks for HTTP basic authentication. The username is `preview`. The password is kept on that server at `/root/vividpreview-preview.password` and is not stored in this repository.
+https://preview.vividworks.my is the isolated preview on the existing VPS. It is public, with no preview password.
 
 `.github/workflows/preview-deploy.yml` deploys `main` by sending the source to the server. The server rebuilds with Node.js 22, restarts only the `vividpreview` service, and restores the previous build if `http://127.0.0.1:8787/api/health` fails. The workflow needs a repository secret named `VIVIDPREVIEW_SSH_KEY`. That value is the private key stored on the server at `/root/.ssh/vividpreview_deploy`. The matching public key can only run `/home/vividpreview/bin/deploy`.
 
