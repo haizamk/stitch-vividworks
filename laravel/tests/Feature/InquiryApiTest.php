@@ -55,15 +55,16 @@ class InquiryApiTest extends TestCase
     {
         $original = config('database.default');
         config([
-            'database.default' => 'pgsql',
-            'database.connections.pgsql.host' => '127.0.0.1',
-            'database.connections.pgsql.port' => '1',
-            'database.connections.pgsql.database' => 'blocked',
-            'database.connections.pgsql.username' => 'blocked',
-            'database.connections.pgsql.password' => '',
-            'database.connections.pgsql.url' => null,
+            'database.connections.pgsql_down' => array_merge(config('database.connections.pgsql'), [
+                'host' => '127.0.0.1',
+                'port' => '1',
+                'database' => 'blocked',
+                'username' => 'blocked',
+                'password' => '',
+                'url' => null,
+            ]),
+            'database.default' => 'pgsql_down',
         ]);
-        DB::purge('pgsql');
 
         try {
             $this->getJson('/api/health')
@@ -75,7 +76,7 @@ class InquiryApiTest extends TestCase
                 ]);
         } finally {
             config(['database.default' => $original]);
-            DB::purge('pgsql');
+            DB::purge('pgsql_down');
         }
     }
 

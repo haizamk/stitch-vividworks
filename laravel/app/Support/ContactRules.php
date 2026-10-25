@@ -68,7 +68,10 @@ class ContactRules
 
     public static function storageName(): string
     {
-        return config('database.default') === 'pgsql' ? 'postgres' : 'file';
+        $connection = (string) config('database.default');
+        $driver = config("database.connections.{$connection}.driver", $connection);
+
+        return $driver === 'pgsql' ? 'postgres' : 'file';
     }
 
     public static function savedMessage(?string $storage = null): string
