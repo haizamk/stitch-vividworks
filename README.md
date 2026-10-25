@@ -67,6 +67,12 @@ Optional environment overrides are listed in `.env.example`. Copy it to `.env` o
 
 Starter, Professional, and Business are proposed labels. Leave their price and features as “Akan disahkan” until an approved specification replaces them. Do not describe FREE as free for life unless that is explicitly confirmed.
 
+## Preview server
+
+https://preview.vividworks.my is the isolated preview on the existing VPS. Opening it asks for HTTP basic authentication. The username is `preview`. The password is kept on that server at `/root/vividpreview-preview.password` and is not stored in this repository.
+
+`.github/workflows/preview-deploy.yml` deploys `main` by sending the source to the server. The server rebuilds with Node.js 22, restarts only the `vividpreview` service, and restores the previous build if `http://127.0.0.1:8787/api/health` fails. The workflow needs a repository secret named `VIVIDPREVIEW_SSH_KEY`. That value is the private key stored on the server at `/root/.ssh/vividpreview_deploy`. The matching public key can only run `/home/vividpreview/bin/deploy`.
+
 ## Northflank
 
 `northflank.json` is a template for one project in Asia Southeast (Singapore), one PostgreSQL 16 addon, and one combined service. The service builds `Dockerfile` from Git and serves the site on port 8080. The template aliases the addon `POSTGRES_URI` to `DATABASE_URL`, then restarts the service after the database and the first deployment are running.
