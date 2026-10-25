@@ -52,6 +52,27 @@ npm start
 | `POST` | `/api/contact` | Validates and stores one inquiry. Does not send email. |
 | `GET` | `/api/inquiries` | Last 100 inquiries. Requires `Authorization: Bearer <ADMIN_TOKEN>`. Hidden when the token is unset. |
 
+## Laravel API (Fasa B1)
+
+`laravel/` is an isolated Laravel 13 app with the same three API routes. It does not replace the Express server, and it is not wired to the preview site. The React app still talks to Express on port 8787.
+
+PostgreSQL settings live in `laravel/.env` (see `laravel/.env.example`). Do not commit that file, and do not run `php artisan migrate` against the preview database. The inquiries migration does nothing when `inquiries` already exists, and its `down()` method does not drop the table.
+
+PHPUnit uses SQLite in memory, so it does not need `pdo_pgsql` or a PostgreSQL server:
+
+```bash
+cd laravel
+composer install
+./vendor/bin/phpunit
+```
+
+A local smoke server, if needed, must stay on loopback:
+
+```bash
+cd laravel
+php artisan serve --host=127.0.0.1 --port=8790
+```
+
 ## Configuration
 
 Edit these files rather than hard-coding values in components:
