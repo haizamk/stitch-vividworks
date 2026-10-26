@@ -34,7 +34,7 @@ npm start
 
 Branch `cursor/vividworks-stitch-c2-3339` turns the Google Stitch boards into React routes. Studio, wizard, editor, AI copy, analytics, WhatsApp, billing and settings are labelled demo. They do not create accounts, charge cards, publish sites, or send WhatsApp messages. Paid plan prices from the Stitch export (RM39, RM79, RM169, yearly 20 percent, 14-day trials) are not shown.
 
-Leave `DATABASE_URL` unset. Do not deploy this branch to preview.vividworks.my until a later approval. Pushing `main` still updates the old Express app only and does not replace the Laravel `public` files that now serve the preview host.
+Leave `DATABASE_URL` unset for local work. On 26 Oktober 2026, 10:43 pagi MYT, the built files from this branch were copied into the preview Laravel `public` directory after approval. `index.php` was left in place. `main` still updates only the Express app and does not replace those Laravel files. vividworks.my was not changed.
 
 | Path | Board |
 | --- | --- |
