@@ -6,3 +6,9 @@ data
 .env.*
 *.log
 npm-debug.log*
+laravel/vendor
+laravel/.phpunit.cache
+laravel/phpunit.xml
+laravel/storage/*.key
+laravel/storage/logs/*
+laravel/bootstrap/cache/*.php
