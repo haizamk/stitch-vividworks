@@ -100,6 +100,8 @@ cd laravel
 php artisan serve --host=127.0.0.1 --port=8790
 ```
 
+Coolify on Monalisa can run this API as its own staging container. The service uses base directory `laravel` and `laravel/Dockerfile`, not the root `Dockerfile`. That image does not include the React site or the Express server. Staging data belongs on a new Supabase database. Do not point it at the preview database or production. The manual migrate step is documented in `laravel/README.md`.
+
 ## Configuration
 
 Edit these files rather than hard-coding values in components:

@@ -1,0 +1,28 @@
+# Context is laravel/. Secrets, installed dependencies, and runtime files stay out.
+.git
+.github
+.env
+.env.*
+!.env.example
+vendor
+node_modules
+.phpunit.cache
+.phpunit.result.cache
+npm-debug.log
+*.log
+storage/logs
+storage/*.key
+storage/pail
+storage/framework/cache/data
+storage/framework/sessions
+storage/framework/views
+storage/framework/testing
+bootstrap/cache/*.php
+public/hot
+public/storage
+public/build
+
+# These untracked migrations create a role and change ACLs. They are not part of staging.
+database/migrations/2026_11_08_100013_create_vividworks_membership_definer_role.php
+database/migrations/2026_11_08_100014_create_membership_class_a_functions.php
+database/migrations/2026_11_08_100015_expand_vividworks_membership_definer_privileges.php
