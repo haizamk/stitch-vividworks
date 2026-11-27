@@ -17,9 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->throttleApi(null);
-        // Coolify is the only path to this container. Do not publish port 80 on the host.
-        $middleware->trustProxies(at: '*');
+        $middleware->trustProxies(at: '127.0.0.1');
         $middleware->prependToGroup('api', RejectOversizedJson::class);
+        $middleware->alias([
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
